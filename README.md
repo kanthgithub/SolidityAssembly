@@ -45,6 +45,21 @@ Addresses are 20 bytes long, and occupy the right-most 20 bytes of a 32-byte wor
 ```
 
 ```
+0x000000000000000000000000aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+
+24 characters (prefix):
+ 000000000000000000000000 
+
+40 characters (address):
+ aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+
+2 characters  =  1 Byte => 24 Characters = 12 Bytes
+2 characters  =  1 Byte => 40 Characters = 20 Bytes
+
+total: 64 characters => 32 Bytes
+```
+
+```
 The bytes type is two (or more) words: the number of bytes followed by the data.
 The number of bytes in an address is 20 = 0x14, so it need to look like this in memory.
 ```
