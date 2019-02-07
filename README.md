@@ -4,8 +4,8 @@
 
 ## Read The Docs:
 
-- https://solidity.readthedocs.io/en/v0.5.0/assembly.html#example
-- https://solidity.readthedocs.io/en/v0.5.0/assembly.html
+- https://solidity.readthedocs.io/en/v0.5.3/assembly.html#example
+- https://solidity.readthedocs.io/en/v0.5.3/assembly.html
 
 
 ## Reddit:
