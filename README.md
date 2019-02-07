@@ -8,3 +8,12 @@
 - https://solidity.readthedocs.io/en/v0.5.0/assembly.html
 
 
+## Reddit:
+
+- https://www.reddit.com/r/ethdev/comments/80y3oc/interviewing_for_intermediateexperienced_solidity/
+
+## understanding Instructions:
+
+- mload
+
+  - https://ethereum.stackexchange.com/questions/9603/understanding-mload-assembly-function
