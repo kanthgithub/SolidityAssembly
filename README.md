@@ -15,5 +15,11 @@
 ## understanding Instructions:
 
 - mload
-
   - https://ethereum.stackexchange.com/questions/9603/understanding-mload-assembly-function
+
+
+## Datatype conversions:
+
+- Address to Bytes
+
+  - https://ethereum.stackexchange.com/questions/884/how-to-convert-an-address-to-bytes-in-solidity
