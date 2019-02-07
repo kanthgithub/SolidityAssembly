@@ -34,6 +34,7 @@
    }
 }
 ```
+
 ```
 This is designed to convert an address to a dynamic bytes type.
 Addresses are 20 bytes long, and occupy the right-most 20 bytes of a 32-byte word:
@@ -42,6 +43,7 @@ Addresses are 20 bytes long, and occupy the right-most 20 bytes of a 32-byte wor
 ```js
 0x000000000000000000000000aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 ```
+
 ```
 The bytes type is two (or more) words: the number of bytes followed by the data.
 The number of bytes in an address is 20 = 0x14, so it need to look like this in memory.
