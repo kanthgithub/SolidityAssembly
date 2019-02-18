@@ -97,3 +97,44 @@ In short, this is very smart,
 but I would definitely zero-out the two words at top of memory
 before doing this to avoid any possible issues.
 ```
+### solidity-to-inline-assembly
+
+```js
+contract MyContract {
+    address public beneficiary;
+
+    function MyContract(address _beneficiary) public {
+         beneficiary = _beneficiary;
+    }
+
+    function () public payable {
+         beneficiary.transfer(msg.value);
+    }
+}
+```
+
+```js
+function () payable {
+    bytes4 sig = bytes4(keccak256("()")); // function signature
+
+    assembly {
+        let x := mload(0x40) // get empty storage location
+        mstore ( x, sig ) // 4 bytes - place signature in empty storage
+
+        let ret := call (gas, 
+            beneficiary,
+            msg.value, 
+            x, // input
+            0x04, // input size = 4 bytes
+            x, // output stored at input location, save space
+            0x0 // output size = 0 bytes
+        )
+
+        mstore(0x40, add(x,0x20)) // update free memory pointer
+    }
+}
+```
+
+
+https://ethereum.stackexchange.com/questions/47462/solidity-to-inline-assembly
+
