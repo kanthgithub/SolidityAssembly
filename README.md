@@ -210,3 +210,57 @@ contract ExistingWithoutABI  {
 }
 ```
 
+## Proxy-Delegate using assembly:
+
+- https://fravoll.github.io/solidity-patterns/proxy_delegate.html
+
+```
+This generic example of a Proxy contract is inspired by this post and stores the current version of the delegate in its own storage. Because the design of the Delegate contract can take many forms, there is no explicit example given.
+
+// This code has not been professionally audited, therefore I cannot make any promises about
+// safety or correctness. Use at own risk.
+```
+
+```js
+contract Proxy {
+
+    address delegate;
+    address owner = msg.sender;
+
+    function upgradeDelegate(address newDelegateAddress) public {
+        require(msg.sender == owner);
+        delegate = newDelegateAddress;
+    }
+
+    function() external payable {
+        assembly {
+            let _target := sload(0)
+            calldatacopy(0x0, 0x0, calldatasize)
+            let result := delegatecall(gas, _target, 0x0, calldatasize, 0x0, 0)
+            returndatacopy(0x0, 0x0, returndatasize)
+            switch result case 0 {revert(0, 0)} default {return (0, returndatasize)}
+        }
+    }
+}
+```
+
+```
+The address variables in line 3 and 4 store the address of the delegate and the owner, respectively. The upgradeDelegate(..) function is the mechanism that allows a new version of the delegate being used, without the caller of the proxy having to worry about it. An authorized entity, in this case the owner (checked with a simple form of the Access Restriction pattern in line 7) is able to provide the address of a new delegate version, which replaces the old one (line 8).
+```
+```
+The actual forwarding functionality is implemented in the function starting from line 11. The function does not have a name and is therefore the fallback function, which is being called for every unknown function identifier. Therefore, every function call to the proxy (besides the ones to upgradeDelegate(..)) will trigger the fallback function and execute the following inline assembly code: Line 13 loads the first variable in storage, in this case the address of the delegate, and stores it in the memory variable _target. Line 14 copies the function signature and any parameters into memory. In line 15 the delegatecall to the _target address is made, including the function data that has been stored in memory. A boolean containing the execution outcome is returned and stored in the result variable. Line 16 copies the actual return value into memory. The switch in line 17 checks whether the execution outcome was negative, in which case any state changes are reverted, or positive, in which case the result is returned to the caller of the proxy.
+```
+
+<b>Consequences</b>
+
+```
+There are several implications that should be considered when using the Proxy Delegate pattern for achieving upgradeability. With its implementation, complexity is increased drastically and especially developers new to smart contract development with Solidity, might find it difficult to understand the concepts of delegatecalls and inline assembly. This increases the chance of introducing bugs or other unintended behavior. Another point are the limitations on storage changes: fields cannot be deleted nor rearranged. While this is not an insurmountable problem, it is important to be aware of, in order to not accidentally break contract storage. An important negative consequence from a social perspecive is the potential loss in trust from users. With upgradeable contracts, immutability as one of the key benefits of blockchains, can be avoided. Users have to trust the responsible entities to not introduce any unwanted functionality with one of their upgrades. A solution to this caveat could be strategies that only allow for partial upgrades. Core features could be non-upgradeable, while other, less essential, features are implemented with the option for upgrades. If this approach is not applicable, a trust loss could also be mitigated by introducing a test period, during which upgrades can be carried out. After the expiration of the test period, the contract cannot be changed any longer.
+
+Besides these negative consequences, the Proxy Delegate pattern is an efficient way to separate the upgrading mechanism from contract design. It allows for upgradeability, without breaking any dependencies.
+```
+
+<b>Known Uses</b>
+
+```
+Implementations of the Proxy Delegate pattern are more likely to be found in bigger DApps, containing a large number of contracts. One example for this is Augur, a prediction market that lets users bet on the outcome of future events. Another example is the EtherRouter contract of Colony, which is a platform for creating decentralized organizations. In both cases, Augur and Colony, the address of the upgradeable contract is not stored in the proxy itself, but in some kind of address resolver.
+```
