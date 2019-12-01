@@ -270,7 +270,14 @@ Implementations of the Proxy Delegate pattern are more likely to be found in big
 - https://ethereum.stackexchange.com/questions/3667/difference-between-call-callcode-and-delegatecall
 
 1. Call : changes the context to callee
+   - When Alice does CALL on Bob, the code runs in the context of Bob. 
+     Whenever the code writes to storage, it writes to the storage of account Bob
 2. callcode: context still will be caller, but msg.sender & msg.value will not be maintained
+   - When Alice does CALLCODE on Bob, the code runs in the context of Alice. So imagine that the code of Bob is in Alice.
+     Whenever the code writes to storage, it writes to the storage of account Alice, instead of Bob.  
 3. delegatecall: context still will be caller along with msg.sender & msg.value will be maintained (current context)
-
-
+   - DELEGATECALL was a new opcode that was a bug fix for CALLCODE which did not preserve msg.sender and msg.value.
+   - If Alice invokes Bob who does DELEGATECALL to Charlie, 
+     the msg.sender in the DELEGATECALL is Alice (whereas if CALLCODE was used the msg.sender would be Bob).
+   - When Alice does CALLCODE on Bob, the code runs in the context of Alice. So imagine that the code of Bob is in Alice.
+     Whenever the code writes to storage, it writes to the storage of account Alice, instead of Bob.  
