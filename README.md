@@ -264,3 +264,13 @@ Besides these negative consequences, the Proxy Delegate pattern is an efficient 
 ```
 Implementations of the Proxy Delegate pattern are more likely to be found in bigger DApps, containing a large number of contracts. One example for this is Augur, a prediction market that lets users bet on the outcome of future events. Another example is the EtherRouter contract of Colony, which is a platform for creating decentralized organizations. In both cases, Augur and Colony, the address of the upgradeable contract is not stored in the proxy itself, but in some kind of address resolver.
 ```
+
+### call vs callcode vs delegatecall
+
+- https://ethereum.stackexchange.com/questions/3667/difference-between-call-callcode-and-delegatecall
+
+1. Call : changes the context to callee
+2. callcode: context still will be caller, but msg.sender & msg.value will not be maintained
+3. delegatecall: context still will be caller along with msg.sender & msg.value will be maintained (current context)
+
+
